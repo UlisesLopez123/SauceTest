@@ -51,6 +51,15 @@ jobs:
             echo "❌ Cypress tests FAILED"
             fi
 
+      - name: Read HTML report content
+        id: read_report
+        run: |
+            REPORT_CONTENT=$(cat cypress/reports/html/index.html)
+            # Escapamos los saltos de línea para evitar problemas con yaml
+            REPORT_CONTENT="${REPORT_CONTENT//'%'/'%25'}"
+            REPORT_CONTENT="${REPORT_CONTENT//$'\n'/'%0A'}"
+            echo "REPORT_CONTENT=$REPORT_CONTENT" >> $GITHUB_ENV
+
       - name: Send test result email
         uses: dawidd6/action-send-mail@v3
         with:
@@ -61,6 +70,5 @@ jobs:
             subject: "GitHub Actions - Cypress Test Results"
             to: ulises.lopez001.lj@gmail.com
             from: ${{ secrets.GMAIL_USER }}
-            body: |
-                Cypress tests have completed. Check the report attached or in the artifacts.
-                
+            content_type: text/html
+            body: ${{ env.REPORT_CONTENT }}
