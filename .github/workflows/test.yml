@@ -50,7 +50,7 @@ jobs:
             else
             echo "❌ Cypress tests FAILED"
             fi
-            
+
       - name: Send test result email
         uses: dawidd6/action-send-mail@v3
         with:
@@ -59,7 +59,7 @@ jobs:
             username: ${{ secrets.GMAIL_USER }}
             password: ${{ secrets.GMAIL_APP_PASSWORD }}
             subject: "GitHub Actions - Cypress Test Results"
-            to: tu-email-para-recibir@gmail.com
+            to: ulises.lopez001.lj@gmail.com
             from: ${{ secrets.GMAIL_USER }}
             body: |
                 Cypress tests have completed. Check the report attached or in the artifacts.
