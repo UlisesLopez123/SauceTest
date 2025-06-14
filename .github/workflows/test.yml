@@ -63,3 +63,4 @@ jobs:
             from: ${{ secrets.GMAIL_USER }}
             body: |
                 Cypress tests have completed. Check the report attached or in the artifacts.
+                
