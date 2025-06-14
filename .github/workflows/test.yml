@@ -24,7 +24,14 @@ jobs:
 
       - name: Run Cypress tests
         run: npx cypress run
-
+    
+      - name: Upload Mochawesome report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+            name: mochawesome-report
+            path: cypress/reports
+   
       - name: Upload Cypress artifacts (videos, screenshots)
         if: always()
         uses: actions/upload-artifact@v4
