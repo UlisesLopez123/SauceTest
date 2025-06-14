@@ -1,4 +1,4 @@
-name: Run Cypress Tests
+name: Run Cypress Tests and Deploy Report
 
 on:
   push:
@@ -24,43 +24,12 @@ jobs:
 
       - name: Run Cypress tests
         run: npx cypress run
-    
-      - name: Upload Mochawesome report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-            name: mochawesome-report
-            path: cypress/reports
-   
-      - name: Upload Cypress artifacts (videos, screenshots)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: cypress-artifacts
-          path: |
-            cypress/videos
-            cypress/screenshots
 
-      - name: Notify (log only)
-        if: always()
-        run: |
-            status="${{ job.status }}"
-            if [ "$status" == "success" ]; then
-            echo "✅ Cypress tests PASSED"
-            else
-            echo "❌ Cypress tests FAILED"
-            fi
+      - name: Generate Mochawesome report
+        run: npx mochawesome-merge cypress/results/*.json > mochawesome.json && npx mochawesome-report-generator mochawesome.json -o mochawesome-report
 
-      - name: Send test result email
-        uses: dawidd6/action-send-mail@v3
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-            server_address: smtp.gmail.com
-            server_port: 465
-            username: ${{ secrets.GMAIL_USER }}
-            password: ${{ secrets.GMAIL_APP_PASSWORD }}
-            subject: "GitHub Actions - Cypress Test Results"
-            to: ulises.lopez001.lj@gmail.com
-            from: ${{ secrets.GMAIL_USER }}
-            body: Cypress tests have completed. The report is attached.
-            attachments: cypress/reports/html/index.html
-
+          github_token: ${{ secrets.GH_PAGES_TOKEN }}
+          publish_dir: ./mochawesome-report
