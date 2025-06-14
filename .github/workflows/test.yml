@@ -70,5 +70,6 @@ jobs:
             subject: "GitHub Actions - Cypress Test Results"
             to: ulises.lopez001.lj@gmail.com
             from: ${{ secrets.GMAIL_USER }}
-            content_type: text/html
-            body: ${{ env.REPORT_CONTENT }}
+            body: Cypress tests have completed. The report is attached.
+            attachments: cypress/reports/html/index.html
+
