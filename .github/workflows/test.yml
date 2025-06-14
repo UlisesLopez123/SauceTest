@@ -40,3 +40,13 @@ jobs:
           path: |
             cypress/videos
             cypress/screenshots
+
+      - name: Notify (log only)
+        if: always()
+        run: |
+            status="${{ job.status }}"
+            if [ "$status" == "success" ]; then
+            echo "✅ Cypress tests PASSED"
+            else
+            echo "❌ Cypress tests FAILED"
+            fi
