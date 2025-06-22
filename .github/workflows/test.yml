@@ -24,7 +24,24 @@ jobs:
 
       - name: Run Cypress tests
         run: npx cypress run
+      
+      - name: Upload report as artifact
+        if: always()
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: cypress/reports
 
+  deploy:
+    needs: cypress-run
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v2     
+             
       # - name: Upload Mochawesome report
       #   if: always()
       #   uses: actions/upload-artifact@v4
