@@ -24,12 +24,18 @@ jobs:
 
       - name: Run Cypress tests
         run: npx cypress run
-      
-      - name: Upload report as artifact
+
+      - name: Prepare HTML report for GitHub Pages
+        if: always()
+        run: |
+          mkdir public
+          cp -r cypress/reports/html/* public/
+
+      - name: Upload report to GitHub Pages
         if: always()
         uses: actions/upload-pages-artifact@v2
         with:
-          path: cypress/reports/html
+          path: public
 
   deploy:
     needs: cypress-run
@@ -40,6 +46,4 @@ jobs:
 
     steps:
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v2     
-
-
+        uses: actions/deploy-pages@v2
